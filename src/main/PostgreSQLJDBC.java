@@ -90,7 +90,7 @@ public class PostgreSQLJDBC {
 			       sql = "CREATE TABLE Event " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
 		                        " types           CHAR(100)," +
-			                    " date        CHAR(10),  " +
+			                    " date        CHAR(30),  " +
 			                    " remark         CHAR(100), " +
 			                    " pedigree           CHAR(50)," +
 			                    " descr          CHAR(100),  " +
