@@ -325,8 +325,8 @@ public class PostgreSQLJDBC {
 			   Map<String, String> d = (Map<String, String>)litr.next();
 			   String entity = d.get("entity");
 			   if (entity == "person" ) {
-				   sql = "INSERT INTO person (name, alias, section, region, role, prof, living, remark, age, types, pedigree, node_text, id_ori, source) "
-			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%b', '%s', %d, '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("alias"), d.get("section"), d.get("region"), d.get("role"), d.get("prof"), d.get("living"), d.get("remark"), d.get("age"), d.get("types"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
+				   sql = "INSERT INTO person (name, sex, alias, section, region, role, prof, living, remark, age, types, pedigree, node_text, id_ori, source) "
+			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%b', '%s', %d, '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("sex"), d.get("alias"), d.get("section"), d.get("region"), d.get("role"), d.get("prof"), d.get("living"), d.get("remark"), d.get("age"), d.get("types"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity == "event"){
 				   sql = "INSERT INTO event (types, date, remark, pedigree, descr, node_text, id_ori, source) "
