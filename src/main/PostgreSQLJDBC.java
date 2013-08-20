@@ -71,7 +71,7 @@ public class PostgreSQLJDBC {
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
 			                    " name           CHAR(50),  " +
 			                    " alias          CHAR(50),  " +
-			                    " sex          CHAR(1),  " +
+			                    " sex          CHAR(5),  " +
 			                    " section        CHAR(50),  " +
 			                    " region         CHAR(50), " +
 			                    " role           CHAR(50)," +
@@ -82,7 +82,7 @@ public class PostgreSQLJDBC {
 			                    " types          CHAR(100), " +
 			                    " pedigree         CHAR(50),"  +
 			                    " node_text          CHAR(50), " +
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)  , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "event") {
@@ -95,7 +95,7 @@ public class PostgreSQLJDBC {
 			                    " pedigree           CHAR(50)," +
 			                    " descr          CHAR(100),  " +
 			                    " node_text          CHAR(50), " +
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)  , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "location") {
@@ -109,7 +109,7 @@ public class PostgreSQLJDBC {
 			                    " shape           GEOMETRY," +			                    
 			                    " pedigree         CHAR(50),"  +
 			                    " node_text          CHAR(50), " +
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "organization") {
@@ -122,7 +122,7 @@ public class PostgreSQLJDBC {
 			                    " types          CHAR(100), " +
 			                    " pedigree         CHAR(50),"  +
 			                    " node_text          CHAR(50), " +
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "facility") {
@@ -134,7 +134,7 @@ public class PostgreSQLJDBC {
 			                    " types          CHAR(100), " +
 			                    " pedigree         CHAR(50),"  +
 			                    " node_text          CHAR(50), " +
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "vehicle") {
@@ -147,7 +147,7 @@ public class PostgreSQLJDBC {
 			                    " descr           CHAR(100),  " +
 			                    " pedigree         CHAR(50),"  +
 			                    " node_text          CHAR(50), " +
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "event_person") {
@@ -158,7 +158,7 @@ public class PostgreSQLJDBC {
 			                    " person_id         INTEGER REFERENCES person,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER , " +			        
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "event_location") {
@@ -169,7 +169,7 @@ public class PostgreSQLJDBC {
 			                    " location_id         INTEGER REFERENCES location,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER  ," +			        
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "event_organization") {
@@ -180,7 +180,7 @@ public class PostgreSQLJDBC {
 			                    " organization_id         INTEGER REFERENCES organization,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER , " +			        
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "event_facility") {
@@ -191,7 +191,7 @@ public class PostgreSQLJDBC {
 			                    " facility_id         INTEGER REFERENCES facility,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER , " +			        
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "event_vehicle") {
@@ -202,7 +202,7 @@ public class PostgreSQLJDBC {
 			                    " vehicle_id         INTEGER REFERENCES vehicle,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER , " +			        
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			   else if (t == "person_organization") {
@@ -213,7 +213,7 @@ public class PostgreSQLJDBC {
 			                    " organization_id         INTEGER REFERENCES organization,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER,  " +			        
-			                    " id_ori          CHAR(10)  NOT NULL, " +
+			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
 			 
