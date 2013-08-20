@@ -1,11 +1,20 @@
 This is program is created to import UB's data to postgres database. 
 
 Main interface: PostgreSQLJDBC::ImportData(List<Map<String, String>> data)
-Parameter data format: A list of Map formatted as:
+Parameter "data" format: A list of Map formatted as:
     "entity": "[entity_name]", value out of "person", "event", "location", "facility", "vehicle", "organization", "event_person", "event_location", "event_organization", "event_facility", "event_vehicle"; that is, table name
     "[attribute1]": "[attribute_value]", attribute can be "name", "types", etc., based on the "entity"
     "[attribute2]": ...
     ...
+
+Specifically, "relationship" is also considered as an entity here, with special requirements. Take "event-person" for example, attributes include:
+    "event_id_ori": [123],
+    "person_id_ori": [234],
+    "direction": 0, or 1 (0 indicates event-to-person, while 1 indicates person-to-event)
+    "types":
+    "id_ori":
+    "source": "UB"
+    
 
 For details of table, see Google doc "MURI Database Schema.doc"
 

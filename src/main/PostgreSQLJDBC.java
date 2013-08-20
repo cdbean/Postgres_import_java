@@ -24,20 +24,23 @@ public class PostgreSQLJDBC {
       d.put("id_ori", "234");
       data.add(d);
       
-      jdbc.ImportData(data);
-      
+      String url = "jdbc:postgresql://localhost:5432/test"; //url to database
+      String username = "postgres";  // user name
+      String password = "asdf1234";  // password
+      jdbc.ImportData(data, url, username, password);
    }
    
-   public void ImportData(List<Map<String, String>> data) {
+   public void ImportData(List<Map<String, String>> data, String url, String username, String password) {
 	   Connection c = null;
        try {
-	      c = this.BuildConnection(c);
+	      c = this.BuildConnection(c, url, username, password);
 	      c.setAutoCommit(false);
        } catch (SQLException e1) {
 			e1.printStackTrace();
 	   }  
        this.CreateTable(c);
-       this.AddData(c,  data);
+       this.AddEntities(c,  data);
+       this.AddRelationships(c,  data);
        this.CloseConnection(c);
    }
    
@@ -68,6 +71,7 @@ public class PostgreSQLJDBC {
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
 			                    " name           CHAR(50),  " +
 			                    " alias          CHAR(50),  " +
+			                    " sex          CHAR(1),  " +
 			                    " section        CHAR(50),  " +
 			                    " region         CHAR(50), " +
 			                    " role           CHAR(50)," +
@@ -219,14 +223,35 @@ public class PostgreSQLJDBC {
 			   System.out.println("Done.");
 		   }  
 		   c.commit();
-	       stmt.close();
-		   
+	       stmt.close();		   
 	   } catch ( Exception e ) {
 	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
        }
    }
    
-   public void AddData(Connection c, List<Map<String, String>> data) {
+   private int queryID(Connection c, String table, String query) {
+	   int id = -1;
+	   
+	   try {
+		   Statement stmt = null;   
+		   stmt = c.createStatement();
+		   String sql = String.format("SELECT id FROM %s WHERE id_ori='%s'",  table, query);
+		   ResultSet rs = stmt.executeQuery(sql);
+		   while(rs.next()){
+		         //Retrieve by column name
+		         id  = rs.getInt("id");
+		   }
+		   rs.close();
+	   } catch ( Exception e ) {
+	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+       }
+	   if (id == -1) {
+		   System.out.println(String.format("Error: Record not found for id_ori='%s' in Table '%s'", query, table));
+	   }
+	   return id;
+   }
+   
+   public void AddRelationships(Connection c, List<Map<String, String>> data) {
 	   try {
 		   Statement stmt = null;
 	   
@@ -234,7 +259,68 @@ public class PostgreSQLJDBC {
 		   String sql = null;
 		   ListIterator litr = data.listIterator();
 		   int count = 0;
-		   System.out.println("Inserting records...");
+		   System.out.println("Inserting relationships...");
+		   while(litr.hasNext()) {
+			   Map<String, String> d = (Map<String, String>)litr.next();
+			   String entity = d.get("entity");
+			   if (entity == "event_person") {
+				   int event_id = queryID(c, "event", d.get("event_id_ori"));
+				   int person_id = queryID(c, "person", d.get("person_id_ori"));			   
+				   sql = "INSERT INTO event_person (event_id, person_id, types, direction, id_ori, source) "
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, person_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			   }
+			   else if (entity == "event_location") {
+				   int event_id = queryID(c, "event", d.get("event_id_ori"));
+				   int location_id = queryID(c, "location", d.get("location_id_ori"));
+				   sql = "INSERT INTO event_location (event_id, location_id, types, direction, id_ori, source) "
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, location_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			   }
+			   else if (entity == "event_organization") {
+				   int event_id = queryID(c, "event", d.get("event_id_ori"));
+				   int organization_id = queryID(c, "organization", d.get("organization_id_ori"));
+				   sql = "INSERT INTO event_organization (event_id, organization_id, types, direction, id_ori, source) "
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			   }
+			   else if (entity == "event_facility") {
+				   int event_id = queryID(c, "event", d.get("event_id_ori"));
+				   int facility_id = queryID(c, "facility", d.get("facility_id_ori"));
+				   sql = "INSERT INTO event_facility (event_id, facility_id, types, direction, id_ori, source) "
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, facility_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			   }
+			   else if (entity == "event_vehicle") {
+				   int event_id = queryID(c, "event", d.get("event_id_ori"));
+				   int vehicle_id = queryID(c, "vehicle", d.get("vehicle_id_ori"));
+				   sql = "INSERT INTO event_vehicle (event_id, vehicle_id, types, direction, id_ori, source) "
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, vehicle_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			   }
+			   else if (entity == "person_organization") {
+				   int person_id = queryID(c, "person", d.get("person_id_ori"));
+				   int organization_id = queryID(c, "organization", d.get("organization_id_ori"));
+				   sql = "INSERT INTO person_organization (person_id, organization_id, types, direction, id_ori, source) "
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", person_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			   }
+			   if (sql != null) {
+				   stmt.executeUpdate(sql);
+				   count = count + 1;
+			   }
+		   }		 
+		   System.out.println(String.format("Inserted %d relationships in total", count));
+		   stmt.close();
+		   c.commit();
+	   } catch ( Exception e ) {
+	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+       }
+   }
+   
+   public void AddEntities(Connection c, List<Map<String, String>> data) {
+	   try {
+		   Statement stmt = null;
+	   
+		   stmt = c.createStatement();
+		   String sql = null;
+		   ListIterator litr = data.listIterator();
+		   int count = 0;
+		   System.out.println("Inserting entities...");
 		   while(litr.hasNext()) {
 			   Map<String, String> d = (Map<String, String>)litr.next();
 			   String entity = d.get("entity");
@@ -262,35 +348,13 @@ public class PostgreSQLJDBC {
 				   sql = "INSERT INTO organization (types, remark, descr, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("remark"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "event_person") {
-				   sql = "INSERT INTO event_person (event_id, person_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", d.get("event_id"), d.get("person_id"), d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			 			   		   
+			   if (sql != null) {
+				   stmt.executeUpdate(sql);
+				   count = count + 1;
 			   }
-			   else if (entity == "event_location") {
-				   sql = "INSERT INTO event_location (event_id, location_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", d.get("event_id"), d.get("location_id"), d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
-			   }
-			   else if (entity == "event_organization") {
-				   sql = "INSERT INTO event_organization (event_id, organization_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", d.get("event_id"), d.get("organization_id"), d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
-			   }
-			   else if (entity == "event_facility") {
-				   sql = "INSERT INTO event_facility (event_id, facility_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", d.get("event_id"), d.get("facility_id"), d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
-			   }
-			   else if (entity == "event_vehicle") {
-				   sql = "INSERT INTO event_vehicle (event_id, vehicle_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", d.get("event_id"), d.get("vehicle_id"), d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
-			   }
-			   else if (entity == "person_organization") {
-				   sql = "INSERT INTO person_organization (person_id, organization_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", d.get("person_id"), d.get("organization_id"), d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
-			   }
-			   		   
-			   stmt.executeUpdate(sql);
-			   count = count + 1;
 		   }		 
-		   System.out.println(String.format("Inserted %d records in total", count));
+		   System.out.println(String.format("Inserted %d entities in total", count));
 		   stmt.close();
 		   c.commit();
 	   } catch ( Exception e ) {
@@ -298,12 +362,12 @@ public class PostgreSQLJDBC {
        }
    }
    
-   public Connection BuildConnection(Connection c) {
+   public Connection BuildConnection(Connection c, String url, String username, String password) {
 	   try {
 	         Class.forName("org.postgresql.Driver");
 	         c = DriverManager
-	            .getConnection("jdbc:postgresql://localhost:5432/test", // database
-	            "postgres", "asdf1234");  // username and password
+	            .getConnection(url, // database
+	            username, password);  // username and password
 	      } catch (Exception e) {
 	         e.printStackTrace();
 	         System.err.println(e.getClass().getName()+": "+e.getMessage());
