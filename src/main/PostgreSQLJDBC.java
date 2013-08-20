@@ -80,7 +80,7 @@ public class PostgreSQLJDBC {
 			                    " remark           CHAR(100),  " +
 			                    " age            INT      , " +
 			                    " types          CHAR(100), " +
-			                    " pedigree         CHAR(50),"  +
+			                    " pedigree         CHAR(500),"  +
 			                    " node_text          CHAR(50), " +
 			                    " id_ori          CHAR(10)  , " +
 			                    " source          CHAR(10)) " ;
@@ -92,7 +92,7 @@ public class PostgreSQLJDBC {
 		                        " types           CHAR(100)," +
 			                    " date        CHAR(30),  " +
 			                    " remark         CHAR(100), " +
-			                    " pedigree           CHAR(50)," +
+			                    " pedigree           CHAR(500)," +
 			                    " descr          CHAR(100),  " +
 			                    " node_text          CHAR(50), " +
 			                    " id_ori          CHAR(10)  , " +
@@ -107,7 +107,7 @@ public class PostgreSQLJDBC {
 			                    " precision        REAL,  " +
 			                    " remark         CHAR(100), " +
 			                    " shape           GEOMETRY," +			                    
-			                    " pedigree         CHAR(50),"  +
+			                    " pedigree         CHAR(500),"  +
 			                    " node_text          CHAR(50), " +
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
@@ -120,7 +120,7 @@ public class PostgreSQLJDBC {
 			                    " descr 			 CHAR(100), " +
 			                    " remark           CHAR(100),  " +
 			                    " types          CHAR(100), " +
-			                    " pedigree         CHAR(50),"  +
+			                    " pedigree         CHAR(500),"  +
 			                    " node_text          CHAR(50), " +
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
@@ -132,7 +132,7 @@ public class PostgreSQLJDBC {
 			                    " descr           CHAR(100),  " +
 			                    " remark           CHAR(100),  " +
 			                    " types          CHAR(100), " +
-			                    " pedigree         CHAR(50),"  +
+			                    " pedigree         CHAR(500),"  +
 			                    " node_text          CHAR(50), " +
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
@@ -145,7 +145,7 @@ public class PostgreSQLJDBC {
 			                    " remark           CHAR(100),  " +
 			                    " types          CHAR(100), " +
 			                    " descr           CHAR(100),  " +
-			                    " pedigree         CHAR(50),"  +
+			                    " pedigree         CHAR(500),"  +
 			                    " node_text          CHAR(50), " +
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
