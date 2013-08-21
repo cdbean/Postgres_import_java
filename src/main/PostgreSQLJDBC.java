@@ -65,7 +65,7 @@ public class PostgreSQLJDBC {
 		   stmt = c.createStatement();
 		   String sql = null;
 		   for (String t : toAddTables) {
-			   if (t == "person") {
+			   if (t.equals("person")) {
 				   System.out.println("Creating Table Person ...");
 			       sql = "CREATE TABLE Person " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -85,7 +85,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)  , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "event") {
+			   else if (t.equals("event")) {
 				   System.out.println("Creating Table Event ...");
 			       sql = "CREATE TABLE Event " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -98,7 +98,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)  , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "location") {
+			   else if (t.equals("location")) {
 				   System.out.println("Creating Table Location ...");
 			       sql = "CREATE TABLE location " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -112,7 +112,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "organization") {
+			   else if (t.equals("organization")) {
 				   System.out.println("Creating Table Organization ...");
 			       sql = "CREATE TABLE organization " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -125,7 +125,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "facility") {
+			   else if (t.equals("facility")) {
 				   System.out.println("Creating Table Facility ...");
 			       sql = "CREATE TABLE facility " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -137,7 +137,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "vehicle") {
+			   else if (t.equals("vehicle")) {
 				   System.out.println("Creating Table Vehicle ...");
 			       sql = "CREATE TABLE vehicle " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -150,7 +150,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "event_person") {
+			   else if (t.equals("event_person")) {
 				   System.out.println("Creating Table event_person ...");
 			       sql = "CREATE TABLE event_person " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -161,7 +161,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "event_location") {
+			   else if (t.equals("event_location")) {
 				   System.out.println("Creating Table event_location ...");
 			       sql = "CREATE TABLE event_location " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -172,7 +172,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "event_organization") {
+			   else if (t.equals("event_organization")) {
 				   System.out.println("Creating Table event_organization ...");
 			       sql = "CREATE TABLE event_organization " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -183,7 +183,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "event_facility") {
+			   else if (t.equals("event_facility")) {
 				   System.out.println("Creating Table event_facility ...");
 			       sql = "CREATE TABLE event_facility " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -194,7 +194,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "event_vehicle") {
+			   else if (t.equals("event_vehicle")) {
 				   System.out.println("Creating Table event_vehicle ...");
 			       sql = "CREATE TABLE event_vehicle " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -205,7 +205,7 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t == "person_organization") {
+			   else if (t.equals("person_organization")) {
 				   System.out.println("Creating Table person_organization ...");
 			       sql = "CREATE TABLE person_organization " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
@@ -263,37 +263,37 @@ public class PostgreSQLJDBC {
 		   while(litr.hasNext()) {
 			   Map<String, String> d = (Map<String, String>)litr.next();
 			   String entity = d.get("entity");
-			   if (entity == "event_person") {
+			   if (entity.equals("event_person")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int person_id = queryID(c, "person", d.get("person_id_ori"));			   
 				   sql = "INSERT INTO event_person (event_id, person_id, types, direction, id_ori, source) "
 			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, person_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "event_location") {
+			   else if (entity.equals("event_location")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int location_id = queryID(c, "location", d.get("location_id_ori"));
 				   sql = "INSERT INTO event_location (event_id, location_id, types, direction, id_ori, source) "
 			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, location_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "event_organization") {
+			   else if (entity.equals("event_organization")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int organization_id = queryID(c, "organization", d.get("organization_id_ori"));
 				   sql = "INSERT INTO event_organization (event_id, organization_id, types, direction, id_ori, source) "
 			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "event_facility") {
+			   else if (entity.equals("event_facility")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int facility_id = queryID(c, "facility", d.get("facility_id_ori"));
 				   sql = "INSERT INTO event_facility (event_id, facility_id, types, direction, id_ori, source) "
 			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, facility_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "event_vehicle") {
+			   else if (entity.equals("event_vehicle")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int vehicle_id = queryID(c, "vehicle", d.get("vehicle_id_ori"));
 				   sql = "INSERT INTO event_vehicle (event_id, vehicle_id, types, direction, id_ori, source) "
 			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, vehicle_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "person_organization") {
+			   else if (entity.equals("person_organization")) {
 				   int person_id = queryID(c, "person", d.get("person_id_ori"));
 				   int organization_id = queryID(c, "organization", d.get("organization_id_ori"));
 				   sql = "INSERT INTO person_organization (person_id, organization_id, types, direction, id_ori, source) "
@@ -324,27 +324,27 @@ public class PostgreSQLJDBC {
 		   while(litr.hasNext()) {
 			   Map<String, String> d = (Map<String, String>)litr.next();
 			   String entity = d.get("entity");
-			   if (entity == "person" ) {
+			   if (entity.equals("person")) {
 				   sql = "INSERT INTO person (name, sex, alias, section, region, role, prof, living, remark, age, types, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%b', '%s', %d, '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("sex"), d.get("alias"), d.get("section"), d.get("region"), d.get("role"), d.get("prof"), d.get("living"), d.get("remark"), d.get("age"), d.get("types"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
-			   else if (entity == "event"){
+			   else if (entity.equals("event")){
 				   sql = "INSERT INTO event (types, date, remark, pedigree, descr, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("types"), d.get("date"), d.get("remark"), d.get("pedigree"), d.get("descr"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
-			   else if (entity == "location") { // the way to insert geometry may not be correct
+			   else if (entity.equals("location")) { // the way to insert geometry may not be correct
 				   sql = "INSERT INTO location (types, precision, remark, shape, descr, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', GeometryFromText('%s',4326), '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("precision"), d.get("remark"), d.get("shape"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
-			   else if (entity == "organization") {
+			   else if (entity.equals("organization")) {
 				   sql = "INSERT INTO organization (types, remark, descr, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("remark"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "facility") {
+			   else if (entity.equals("facility")) {
 				   sql = "INSERT INTO facility (types, remark, descr, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("remark"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source"));
 			   }
-			   else if (entity == "vehicle") {
+			   else if (entity.equals("vehicle")) {
 				   sql = "INSERT INTO organization (types, remark, descr, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("remark"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source"));
 			   }
