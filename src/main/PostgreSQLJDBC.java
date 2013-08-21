@@ -13,15 +13,24 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.postgresql.geometric.PGpoint;
+
 public class PostgreSQLJDBC {
    public static void main(String args[]) {
 	  PostgreSQLJDBC jdbc = new PostgreSQLJDBC();
 
-      List<Map<String, String>> data = new ArrayList<Map<String, String>>();
-      Map<String, String> d = new HashMap<String, String>();
+      List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+      Map<String, Object> d = new HashMap<String, Object>();
+      // person
       d.put("entity", "person");
       d.put("name", "jackie");
       d.put("id_ori", "234");
+      data.add(d);
+      d = new HashMap<String, Object>();
+      // location
+      d.put("entity", "location");
+      PGpoint sh = new PGpoint(12, 23); // lon, lat
+      d.put("shape", sh);
       data.add(d);
       
       String url = "jdbc:postgresql://localhost:5432/test"; //url to database
@@ -30,7 +39,7 @@ public class PostgreSQLJDBC {
       jdbc.ImportData(data, url, username, password);
    }
    
-   public void ImportData(List<Map<String, String>> data, String url, String username, String password) {
+   public void ImportData(List<Map<String, Object>> data, String url, String username, String password) {
 	   Connection c = null;
        try {
 	      c = this.BuildConnection(c, url, username, password);
@@ -71,7 +80,7 @@ public class PostgreSQLJDBC {
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
 			                    " name           CHAR(50),  " +
 			                    " alias          CHAR(50),  " +
-			                    " sex          CHAR(5),  " +
+			                    " sex          CHAR(10),  " +
 			                    " section        CHAR(50),  " +
 			                    " region         CHAR(50), " +
 			                    " role           CHAR(50)," +
@@ -90,7 +99,7 @@ public class PostgreSQLJDBC {
 			       sql = "CREATE TABLE Event " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
 		                        " types           CHAR(100)," +
-			                    " date        CHAR(30),  " +
+			                    " date        TIMESTAMP,  " +
 			                    " remark         CHAR(100), " +
 			                    " pedigree           CHAR(500)," +
 			                    " descr          CHAR(100),  " +
@@ -251,7 +260,7 @@ public class PostgreSQLJDBC {
 	   return id;
    }
    
-   public void AddRelationships(Connection c, List<Map<String, String>> data) {
+   public void AddRelationships(Connection c, List<Map<String, Object>> data) {
 	   try {
 		   Statement stmt = null;
 	   
@@ -312,7 +321,7 @@ public class PostgreSQLJDBC {
        }
    }
    
-   public void AddEntities(Connection c, List<Map<String, String>> data) {
+   public void AddEntities(Connection c, List<Map<String, Object>> data) {
 	   try {
 		   Statement stmt = null;
 	   
@@ -322,8 +331,8 @@ public class PostgreSQLJDBC {
 		   int count = 0;
 		   System.out.println("Inserting entities...");
 		   while(litr.hasNext()) {
-			   Map<String, String> d = (Map<String, String>)litr.next();
-			   String entity = d.get("entity");
+			   Map<String, Object> d = (Map<String, Object>)litr.next();
+			   String entity = (String)d.get("entity");
 			   if (entity.equals("person")) {
 				   sql = "INSERT INTO person (name, sex, alias, section, region, role, prof, living, remark, age, types, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%b', '%s', %d, '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("sex"), d.get("alias"), d.get("section"), d.get("region"), d.get("role"), d.get("prof"), d.get("living"), d.get("remark"), d.get("age"), d.get("types"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
@@ -334,7 +343,7 @@ public class PostgreSQLJDBC {
 			   }
 			   else if (entity.equals("location")) { // the way to insert geometry may not be correct
 				   sql = "INSERT INTO location (types, precision, remark, shape, descr, pedigree, node_text, id_ori, source) "
-			               + String.format("VALUES('%s', '%s', '%s', GeometryFromText('%s',4326), '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("precision"), d.get("remark"), d.get("shape"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
+			               + String.format("VALUES('%s', %f, '%s', ST_MakePoint(%f, %f), '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("precision"), d.get("remark"), ((PGpoint)d.get("shape")).x, ((PGpoint)d.get("shape")).y, d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity.equals("organization")) {
 				   sql = "INSERT INTO organization (types, remark, descr, pedigree, node_text, id_ori, source) "
