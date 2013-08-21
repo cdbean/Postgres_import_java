@@ -2,6 +2,7 @@ package main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DatabaseMetaData;
@@ -36,9 +37,14 @@ public class PostgreSQLJDBC {
       data.add(d);
       d = new HashMap<String, Object>();
       d.put("entity", "event");
+      d.put("date", "2011-02-12 10:00:00");
       d.put("types", "attack");
       d.put("id_ori", "13");
-
+      data.add(d);
+      d = new HashMap<String, Object>();
+      d.put("entity", "event");
+      d.put("types", "call");
+      d.put("id_ori", "16");
       data.add(d);
       d = new HashMap<String, Object>();
       d.put("entity", "event_person");
@@ -46,7 +52,7 @@ public class PostgreSQLJDBC {
       d.put("person_id_ori", "234");
       data.add(d);
       
-      String url = "jdbc:postgresql://localhost:5432/test"; //url to database
+      String url = "jdbc:postgresql://localhost/test"; //url to database
       String username = "postgres";  // user name
       String password = "asdf1234";  // password
       jdbc.ImportData(data, url, username, password);
@@ -352,9 +358,22 @@ public class PostgreSQLJDBC {
 				   sql = "INSERT INTO person (name, sex, alias, section, region, role, prof, living, remark, age, types, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%b', '%s', %d, '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("sex"), d.get("alias"), d.get("section"), d.get("region"), d.get("role"), d.get("prof"), d.get("living"), d.get("remark"), d.get("age"), d.get("types"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
-			   else if (entity.equals("event")){
-				   sql = "INSERT INTO event (types, date, remark, pedigree, descr, node_text, id_ori, source) "
-			               + String.format("VALUES('%s', TO_TIMESTAMP(%s, 'YYYY-MM-DD HH24:MI:SS.FF'), '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("date"), d.get("remark"), d.get("pedigree"), d.get("descr"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
+			   else if (entity.equals("event")) {
+				   PreparedStatement ps = c.prepareStatement("INSERT INTO event (types, date, remark, pedigree, descr, node_text, id_ori, source) VALUES(?, TO_TIMESTAMP(?, 'YYYY-MM-DD HH24:MI:SS'), ?, ?, ?, ?, ?, ?)");
+				   ps.setString(1, (String)d.get("types"));
+				   ps.setString(2, (String)d.get("date"));
+				   ps.setString(3, (String)d.get("remark"));
+				   ps.setString(4, (String)d.get("pedigree"));
+				   ps.setString(5, (String)d.get("descr"));
+				   ps.setString(6, (String)d.get("node_text"));
+				   ps.setString(7, (String)d.get("id_ori"));
+				   ps.setString(8, (String)d.get("source"));
+
+				   ps.executeUpdate();
+				   ps = null;
+				   count = count + 1;
+//				   sql = "INSERT INTO event (types, date, remark, pedigree, descr, node_text, id_ori, source) "
+//			               + String.format("VALUES('%s', TO_TIMESTAMP('%s', 'YYYY-MM-DD HH24:MI:SS'), '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), null, d.get("remark"), d.get("pedigree"), d.get("descr"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity.equals("location")) { // the way to insert geometry may not be correct
 				   PGpoint p = (PGpoint)d.get("shape");
