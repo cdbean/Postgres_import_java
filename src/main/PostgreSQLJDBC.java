@@ -31,6 +31,19 @@ public class PostgreSQLJDBC {
       d.put("entity", "location");
       PGpoint sh = new PGpoint(12, 23); // lon, lat
       d.put("shape", sh);
+      d.put("precision", null);
+      d.put("id_ori", "12");
+      data.add(d);
+      d = new HashMap<String, Object>();
+      d.put("entity", "event");
+      d.put("types", "attack");
+      d.put("id_ori", "13");
+
+      data.add(d);
+      d = new HashMap<String, Object>();
+      d.put("entity", "event_person");
+      d.put("event_id_ori", "13");
+      d.put("person_id_ori", "234");
       data.add(d);
       
       String url = "jdbc:postgresql://localhost:5432/test"; //url to database
@@ -251,6 +264,7 @@ public class PostgreSQLJDBC {
 		         id  = rs.getInt("id");
 		   }
 		   rs.close();
+		   stmt.close();
 	   } catch ( Exception e ) {
 	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
        }
@@ -265,48 +279,48 @@ public class PostgreSQLJDBC {
 		   Statement stmt = null;
 	   
 		   stmt = c.createStatement();
-		   String sql = null;
 		   ListIterator litr = data.listIterator();
 		   int count = 0;
 		   System.out.println("Inserting relationships...");
 		   while(litr.hasNext()) {
+			   String sql = null;
 			   Map<String, String> d = (Map<String, String>)litr.next();
 			   String entity = d.get("entity");
 			   if (entity.equals("event_person")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int person_id = queryID(c, "person", d.get("person_id_ori"));			   
 				   sql = "INSERT INTO event_person (event_id, person_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, person_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", event_id, person_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   else if (entity.equals("event_location")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int location_id = queryID(c, "location", d.get("location_id_ori"));
 				   sql = "INSERT INTO event_location (event_id, location_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, location_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", event_id, location_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   else if (entity.equals("event_organization")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int organization_id = queryID(c, "organization", d.get("organization_id_ori"));
 				   sql = "INSERT INTO event_organization (event_id, organization_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", event_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   else if (entity.equals("event_facility")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int facility_id = queryID(c, "facility", d.get("facility_id_ori"));
 				   sql = "INSERT INTO event_facility (event_id, facility_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, facility_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", event_id, facility_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   else if (entity.equals("event_vehicle")) {
 				   int event_id = queryID(c, "event", d.get("event_id_ori"));
 				   int vehicle_id = queryID(c, "vehicle", d.get("vehicle_id_ori"));
 				   sql = "INSERT INTO event_vehicle (event_id, vehicle_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", event_id, vehicle_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", event_id, vehicle_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   else if (entity.equals("person_organization")) {
 				   int person_id = queryID(c, "person", d.get("person_id_ori"));
 				   int organization_id = queryID(c, "organization", d.get("organization_id_ori"));
 				   sql = "INSERT INTO person_organization (person_id, organization_id, types, direction, id_ori, source) "
-			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s', '%s');", person_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
+			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", person_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   if (sql != null) {
 				   stmt.executeUpdate(sql);
@@ -326,20 +340,21 @@ public class PostgreSQLJDBC {
 		   Statement stmt = null;
 	   
 		   stmt = c.createStatement();
-		   String sql = null;
 		   ListIterator litr = data.listIterator();
 		   int count = 0;
 		   System.out.println("Inserting entities...");
 		   while(litr.hasNext()) {
 			   Map<String, Object> d = (Map<String, Object>)litr.next();
 			   String entity = (String)d.get("entity");
+			   String sql = null;
+
 			   if (entity.equals("person")) {
 				   sql = "INSERT INTO person (name, sex, alias, section, region, role, prof, living, remark, age, types, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%b', '%s', %d, '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("sex"), d.get("alias"), d.get("section"), d.get("region"), d.get("role"), d.get("prof"), d.get("living"), d.get("remark"), d.get("age"), d.get("types"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity.equals("event")){
 				   sql = "INSERT INTO event (types, date, remark, pedigree, descr, node_text, id_ori, source) "
-			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("types"), d.get("date"), d.get("remark"), d.get("pedigree"), d.get("descr"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
+			               + String.format("VALUES('%s', TO_TIMESTAMP(%s, 'YYYY-MM-DD HH24:MI:SS.FF'), '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("date"), d.get("remark"), d.get("pedigree"), d.get("descr"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity.equals("location")) { // the way to insert geometry may not be correct
 				   PGpoint p = (PGpoint)d.get("shape");
