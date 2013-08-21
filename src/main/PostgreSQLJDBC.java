@@ -342,8 +342,15 @@ public class PostgreSQLJDBC {
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("name"), d.get("types"), d.get("date"), d.get("remark"), d.get("pedigree"), d.get("descr"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity.equals("location")) { // the way to insert geometry may not be correct
+				   PGpoint p = (PGpoint)d.get("shape");
+				   Object x = null;
+				   Object y = null;
+				   if (p != null) { 
+					   x = (double)p.x;
+					   y = (double)p.y;
+				   }
 				   sql = "INSERT INTO location (types, precision, remark, shape, descr, pedigree, node_text, id_ori, source) "
-			               + String.format("VALUES('%s', %f, '%s', ST_MakePoint(%f, %f), '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("precision"), d.get("remark"), ((PGpoint)d.get("shape")).x, ((PGpoint)d.get("shape")).y, d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
+			               + String.format("VALUES('%s', %f, '%s', ST_MakePoint(%f, %f), '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("precision"), d.get("remark"), x, y, d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source")); 
 			   }
 			   else if (entity.equals("organization")) {
 				   sql = "INSERT INTO organization (types, remark, descr, pedigree, node_text, id_ori, source) "
