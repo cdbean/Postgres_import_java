@@ -50,6 +50,7 @@ public class PostgreSQLJDBC {
       d.put("entity", "event_person");
       d.put("event_id_ori", "13");
       d.put("person_id_ori", "234");
+      d.put("direction", 1);
       data.add(d);
       
       String url = "jdbc:postgresql://localhost/test"; //url to database
@@ -233,17 +234,171 @@ public class PostgreSQLJDBC {
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
-			   else if (t.equals("person_organization")) {
-				   System.out.println("Creating Table person_organization ...");
-			       sql = "CREATE TABLE person_organization " +
+			   else if (t.equals("event_event")) {
+				   System.out.println("Creating Table event_event ...");
+			       sql = "CREATE TABLE event_event " +
 			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
-			                    " person_id          INTEGER REFERENCES person,  " +
+			                    " event_id_1          INTEGER REFERENCES event,  " +
+			                    " event_id_2         INTEGER REFERENCES event,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("facility_facility")) {
+				   System.out.println("Creating Table facility_facility ...");
+			       sql = "CREATE TABLE facility_facility " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " facility_id_1          INTEGER REFERENCES facility,  " +
+			                    " facility_id_2         INTEGER REFERENCES facility,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("facility_location")) {
+				   System.out.println("Creating Table facility_location ...");
+			       sql = "CREATE TABLE facility_location " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " facility_id          INTEGER REFERENCES facility,  " +
+			                    " location_id         INTEGER REFERENCES location,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("facility_person")) {
+				   System.out.println("Creating Table facility_person ...");
+			       sql = "CREATE TABLE facility_person " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " facility_id          INTEGER REFERENCES facility,  " +
+			                    " person_id         INTEGER REFERENCES person,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("facility_organization")) {
+				   System.out.println("Creating Table facility_organization ...");
+			       sql = "CREATE TABLE facility_organization " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " facility_id          INTEGER REFERENCES facility,  " +
 			                    " organization_id         INTEGER REFERENCES organization,  " +
 			                    " types          CHAR(100), " +
 			                    " direction      INTEGER,  " +			        
 			                    " id_ori          CHAR(10)   , " +
 			                    " source          CHAR(10)) " ;
 			   }
+			   else if (t.equals("facility_vehicle")) {
+				   System.out.println("Creating Table facility_vehicle ...");
+			       sql = "CREATE TABLE facility_vehicle " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " facility_id          INTEGER REFERENCES facility,  " +
+			                    " vehicle_id         INTEGER REFERENCES vehicle,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("location_location")) {
+				   System.out.println("Creating Table location_location ...");
+			       sql = "CREATE TABLE location_location " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " location_id_1          INTEGER REFERENCES location,  " +
+			                    " location_id_2         INTEGER REFERENCES location,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("location_person")) {
+				   System.out.println("Creating Table location_person ...");
+			       sql = "CREATE TABLE location_person " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " location_id          INTEGER REFERENCES location,  " +
+			                    " person_id         INTEGER REFERENCES person,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("location_organization")) {
+				   System.out.println("Creating Table location_organizationv ...");
+			       sql = "CREATE TABLE location_organization " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " location_id          INTEGER REFERENCES location,  " +
+			                    " organization_id         INTEGER REFERENCES organization,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("location_vehicle")) {
+				   System.out.println("Creating Table location_vehicle ...");
+			       sql = "CREATE TABLE location_vehicle " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " location_id          INTEGER REFERENCES location,  " +
+			                    " vehicle_id         INTEGER REFERENCES vehicle,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("person_person")) {
+				   System.out.println("Creating Table person_person ...");
+			       sql = "CREATE TABLE person_person " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " person_id          INTEGER REFERENCES person,  " +
+			                    " person_id         INTEGER REFERENCES person,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("person_vehicle")) {
+				   System.out.println("Creating Table person_vehicle ...");
+			       sql = "CREATE TABLE person_vehicle " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " person_id          INTEGER REFERENCES person,  " +
+			                    " vehicle_id         INTEGER REFERENCES vehicle,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("organization_organization")) {
+				   System.out.println("Creating Table organization_organization ...");
+			       sql = "CREATE TABLE organization_organization " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " organization_id          INTEGER REFERENCES organization,  " +
+			                    " organization_id         INTEGER REFERENCES organization,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("organization_vehicle")) {
+				   System.out.println("Creating Table organization_vehicle ...");
+			       sql = "CREATE TABLE organization_vehicle " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " organization_id          INTEGER REFERENCES organization,  " +
+			                    " vehicle_id         INTEGER REFERENCES vehicle,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }
+			   else if (t.equals("vehicle_vehicle")) {
+				   System.out.println("Creating Table vehicle_vehicle ...");
+			       sql = "CREATE TABLE vehicle_vehicle " +
+			                    "(id SERIAL PRIMARY KEY     NOT NULL," +
+			                    " vehicle_id          INTEGER REFERENCES vehicle,  " +
+			                    " vehicle_id         INTEGER REFERENCES vehicle,  " +
+			                    " types          CHAR(100), " +
+			                    " direction      INTEGER,  " +			        
+			                    " id_ori          CHAR(10)   , " +
+			                    " source          CHAR(10)) " ;
+			   }			 			   
 			 
 			   if (sql != null) {
 				   stmt.executeUpdate(sql);
