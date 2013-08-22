@@ -17,6 +17,9 @@ import java.util.Map;
 import org.postgresql.geometric.PGpoint;
 
 public class PostgreSQLJDBC {
+	List<String> tables = Arrays.asList("person", "event", "location", "facility", "vehicle", "organization", "event_person", "event_location", "event_organization", "event_facility", "event_vehicle", "person_organization");
+	   
+	
    public static void main(String args[]) {
 	  PostgreSQLJDBC jdbc = new PostgreSQLJDBC();
 
@@ -67,14 +70,41 @@ public class PostgreSQLJDBC {
        } catch (SQLException e1) {
 			e1.printStackTrace();
 	   }  
+       this.dropTables(c);
        this.CreateTable(c);
        this.AddEntities(c,  data);
        this.AddRelationships(c,  data);
        this.CloseConnection(c);
    }
    
+   public void dropTables(Connection c)
+   {
+	   System.out.println("Dropping all tables!");
+	   try
+	   {
+		   Statement stmt = null;
+		   stmt = c.createStatement();
+		   String sql = "DROP TABLE ";
+
+		   boolean isFirst = true;
+		   for(String curTable : tables)
+		   {
+			   if(!isFirst)	sql += ", ";
+			   sql += curTable;
+			   isFirst = false;
+		   }
+		   if (sql != null) {
+			   stmt.executeUpdate(sql);
+		   }
+		   c.commit();
+		   stmt.close();	
+		   System.out.println("Done.");
+	   }catch(Exception e){
+		   e.printStackTrace();
+	   }
+   }
+   
    public void CreateTable(Connection c) {
-	   List<String> tables = Arrays.asList("person", "event", "location", "facility", "vehicle", "organization", "event_person", "event_location", "event_organization", "event_facility", "event_vehicle", "person_organization");
 	   List<String> toAddTables = new ArrayList<String>();
 	   
 	   try {
@@ -484,6 +514,7 @@ public class PostgreSQLJDBC {
 			               + String.format("VALUES(%d, %d, '%s', %d, '%s', '%s');", person_id, organization_id, d.get("types"), d.get("direction"), d.get("id_ori"), d.get("source"));
 			   }
 			   if (sql != null) {
+				   System.out.println(sql);
 				   stmt.executeUpdate(sql);
 				   count = count + 1;
 			   }
@@ -493,6 +524,7 @@ public class PostgreSQLJDBC {
 		   c.commit();
 	   } catch ( Exception e ) {
 	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+	         e.printStackTrace();
        }
    }
    
@@ -550,11 +582,12 @@ public class PostgreSQLJDBC {
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("remark"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source"));
 			   }
 			   else if (entity.equals("vehicle")) {
-				   sql = "INSERT INTO organization (types, remark, descr, pedigree, node_text, id_ori, source) "
+				   sql = "INSERT INTO vehicle (types, remark, descr, pedigree, node_text, id_ori, source) "
 			               + String.format("VALUES('%s', '%s', '%s', '%s', '%s', '%s', '%s');", d.get("types"), d.get("remark"), d.get("descr"), d.get("pedigree"), d.get("node_text"), d.get("id_ori"), d.get("source"));
 			   }
 			 			   		   
 			   if (sql != null) {
+				   System.out.println(sql);
 				   stmt.executeUpdate(sql);
 				   count = count + 1;
 			   }
@@ -564,6 +597,7 @@ public class PostgreSQLJDBC {
 		   c.commit();
 	   } catch ( Exception e ) {
 	         System.err.println( e.getClass().getName()+": "+ e.getMessage() );
+	         e.printStackTrace();
        }
    }
    
